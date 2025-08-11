@@ -5,21 +5,22 @@ import os
 import json
 from file_handler import process_dropped_files
 from image_processor import analyze_image_for_serial_number
-# Importujemy nową funkcję
-from allegro_api import search_offers
+
+# --- POPRAWKA: Importujemy klasę AllegroAPIClient, a nie funkcję search_offers ---
+from allegro_api import AllegroAPIClient
 
 
 class ImageUploaderGUI:
     def __init__(self, master, target_folder, allowed_extensions, output_folder):
         self.master = master
         self.target_folder = target_folder
-        self.output_folder = output_folder  # Folder na wyniki
+        self.output_folder = output_folder
         self.allowed_extensions = allowed_extensions
 
         self.master.title("AllegroBot")
-        self.master.geometry("600x650")  # Zwiększamy wysokość na nowy przycisk
+        self.master.geometry("600x650")
 
-        # --- Drop Frame (bez zmian) ---
+        # --- Drop Frame ---
         drop_frame = tk.Frame(self.master, bd=2, relief="solid", bg="lightgrey")
         drop_frame.pack(fill="both", expand=True, padx=20, pady=20)
         info_label = tk.Label(drop_frame, text=f"Przeciągnij i upuść obrazy ({', '.join(self.allowed_extensions)})",
@@ -28,7 +29,7 @@ class ImageUploaderGUI:
         drop_frame.drop_target_register(DND_FILES)
         drop_frame.dnd_bind('<<Drop>>', self.handle_drop)
 
-        # --- Pole wyników analizy (bez zmian) ---
+        # --- Pole wyników analizy ---
         results_frame = tk.Frame(self.master, padx=20)
         results_frame.pack(fill='x', expand=True)
         results_label = tk.Label(results_frame, text="Wyniki Analizy (możesz edytować):", font=("Helvetica", 10))
@@ -44,16 +45,12 @@ class ImageUploaderGUI:
                                    command=self.trigger_analysis)
         analyze_button.pack(pady=5, fill='x')
 
-        # ZMIANA: Dodajemy nowy przycisk wyszukiwania
         search_button = tk.Button(button_frame, text="2. Wyszukaj produkty w Allegro", font=("Helvetica", 12),
                                   command=self.trigger_allegro_search)
         search_button.pack(pady=5, fill='x')
 
     def trigger_allegro_search(self):
-        """Pobiera numery z pola tekstowego i wyszukuje je na Allegro."""
-        # 1. Pobierz zawartość pola tekstowego
         content = self.results_text.get("1.0", tk.END)
-        # 2. Podziel na linie i usuń puste oraz te, które są błędami AI
         queries = [line.strip() for line in content.splitlines() if
                    line.strip() and "None" not in line and "Error" not in line]
 
@@ -66,38 +63,41 @@ class ImageUploaderGUI:
         messagebox.showinfo("Wyszukiwanie...",
                             f"Rozpoczynam wyszukiwanie dla {len(queries)} numerów. To może chwilę potrwać...")
 
+        try:
+            allegro_client = AllegroAPIClient()
+        except (FileNotFoundError, ValueError) as e:
+            messagebox.showerror("Błąd Konfiguracji", str(e))
+            return
+
         all_results = {}
         for query in queries:
-            print(f"Wyszukiwanie dla: '{query}'...")
-            self.master.update_idletasks()  # Odśwież GUI
+            self.master.update_idletasks()
+            offers = allegro_client.search_offers(query)
 
-            # 3. Wywołaj funkcję z modułu allegro_api
-            offers = search_offers(query)
             if offers is not None:
-                all_results[query] = offers
-                print(f"Znaleziono {len(offers)} ofert.")
+                if len(offers) > 0:
+                    print(f"✅ Sukces: Znaleziono {len(offers)} ofert dla '{query}'.")
+                    all_results[query] = offers
+                else:
+                    print(f"🟡 Informacja: Nie znaleziono żadnych aktywnych ofert dla '{query}'.")
+                    all_results[query] = []
             else:
-                print("Wystąpił błąd lub nie znaleziono ofert.")
+                print(f"❌ Błąd: Nie udało się wyszukać ofert dla '{query}'. Sprawdź logi powyżej.")
+                all_results[query] = "API_ERROR"
 
         if not all_results:
             messagebox.showerror("Błąd", "Nie udało się pobrać żadnych ofert. Sprawdź konsolę, aby zobaczyć błędy.")
             return
 
-        # 4. Zapisz wszystkie wyniki do jednego pliku JSON
         output_path = os.path.join(self.output_folder, "allegro_results.json")
         try:
             with open(output_path, 'w', encoding='utf-8') as f:
                 json.dump(all_results, f, ensure_ascii=False, indent=4)
-
-            messagebox.showinfo("Sukces", f"Zapisano wszystkie znalezione oferty do pliku:\n{output_path}")
+            messagebox.showinfo("Sukces", f"Zapisano wszystkie wyniki do pliku:\n{output_path}")
             print(f"--- Wyszukiwanie zakończone. Wyniki zapisano w {output_path} ---")
-
         except Exception as e:
             messagebox.showerror("Błąd zapisu", f"Nie udało się zapisać pliku z wynikami. Błąd: {e}")
 
-    # ... (reszta funkcji: trigger_analysis, handle_drop, show_feedback) ...
-    # Poniższe funkcje pozostają prawie bez zmian.
-    # Warto tylko zaktualizować tekst przycisków
     def trigger_analysis(self):
         self.results_text.delete('1.0', tk.END)
         print("\n--- Rozpoczynanie analizy zdjęć ---")
@@ -125,7 +125,7 @@ class ImageUploaderGUI:
         except tk.TclError:
             file_paths = [event.data]
         copied_files, rejected_files = process_dropped_files(
-            file_paths, self.target_folder, self.allowed_extensions
+            self.target_folder, self.allowed_extensions, file_paths
         )
         self.show_feedback(copied_files, rejected_files)
 

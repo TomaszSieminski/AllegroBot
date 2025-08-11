@@ -70,7 +70,7 @@ class AllegroAPIClient:
 
             # --- POPRAWKA: Kluczowy nagłówek identyfikujący Twoją aplikację ---
             # To rozwiązuje problem błędu 403 Forbidden.
-            'User-Agent': 'AllegroBot/1.0 (by Tomasz; contact: tomek.sieminski23@gmail.com)'
+            'User-Agent': 'SellingBot/1.0 (by Tirgul; contact: tomek.sieminski23@gmail.com)'
         }
 
         # Definiujemy parametry zapytania
