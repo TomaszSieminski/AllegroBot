@@ -5,8 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4892a8bf-f306-4797-873f-acbdc4619f0a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/image_processor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/allegro_api.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/allegro_api.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/openai_api.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/openai_api.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/24.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/input/9.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/allegro_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/allegro_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/file_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/image_proccesor.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,6 +66,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.image_processor.executor": "Run",
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
