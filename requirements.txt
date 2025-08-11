@@ -1,0 +1,6 @@
+openai>=1.0.0         # API OpenAI (GPT-4 Vision)
+requests>=2.31.0      # Zapytania HTTP do Allegro API
+python-dotenv>=1.0.0  # Ładowanie kluczy API z .env (opcjonalne)
+Pillow>=10.0.0        # Przetwarzanie obrazów (jeśli potrzebne)
+numpy>=1.24.0         # Wsparcie dla przetwarzania obrazów (opcjonalne)
+pandas>=2.0.0         # Analiza danych (np. do wyceny) - opcjonalne
